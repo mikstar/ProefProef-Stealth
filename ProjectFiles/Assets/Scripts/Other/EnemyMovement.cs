@@ -16,10 +16,6 @@ public class EnemyMovement : MonoBehaviour {
     //Private
     private int _currentPoint;
 
-
-
-    
-
     private bool _doPatrol = true;
     private bool _alarmed = false;
 
@@ -30,6 +26,8 @@ public class EnemyMovement : MonoBehaviour {
     private Rigidbody _rigidbody;
 
     private EnemySight _enemySight;
+
+
 
     void Start() {
         _rigidbody = GetComponent<Rigidbody>();
@@ -45,6 +43,8 @@ public class EnemyMovement : MonoBehaviour {
             
             if (_alarmed)
             {
+
+				transform.GetChild(1).gameObject.SetActive(true);
                 _cooldownTimer = 3f;
                 _velocity = Vector3.zero;
                 _movedir = _enemySight.personalLastSighting - transform.position;
@@ -52,7 +52,6 @@ public class EnemyMovement : MonoBehaviour {
 
                 if (_alarmTimer <= 0)
                 {
-                    Debug.Log("Timer klaar");
                     _velocity = _movedir.normalized * (movementSpeed*2);
                 }
             }

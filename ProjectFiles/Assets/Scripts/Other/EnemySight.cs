@@ -27,16 +27,19 @@ public class EnemySight : MonoBehaviour {
             Vector3 direction = other.transform.position - transform.position;
             float angle = Vector3.Angle(direction, transform.forward);
 
-            if (angle < fieldOfViewAngle * 0.5f)
+
+            if (angle < fieldOfViewAngle * 0.5f && other.transform.position.y < transform.position.y + 0.8f)
             {
-                RaycastHit hit;
-                
-                if (Physics.Raycast(transform.position, direction.normalized, out hit, 1000)) {
-                    if (hit.collider.gameObject == player) {
-                        playerInSight = true;
-                        personalLastSighting = player.transform.position;
-                    }
-                }
+	            RaycastHit hit;
+	                
+	            if (Physics.Raycast(transform.position, direction.normalized, out hit, 1000)) {
+
+	                if (hit.collider.gameObject == player) {
+
+						playerInSight = true;
+	                    personalLastSighting = player.transform.position;
+	                }
+	            }
             }
         }
     }
