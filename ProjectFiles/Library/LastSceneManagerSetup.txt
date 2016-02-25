@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/Development_Scenes/DevScene_Coen.unity
+- path: Assets/Scenes/Development_Scenes/Sce_DevScene_Mike.unity
   isLoaded: 1
   isActive: 1
