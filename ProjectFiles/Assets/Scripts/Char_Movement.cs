@@ -27,7 +27,7 @@ public class Char_Movement : MonoBehaviour {
 
         if (Physics.Raycast(transform.position, Vector3.forward, out hit))
         {
-            if (hit.collider.gameObject.tag = "ClimbObj")
+            if (hit.collider.gameObject.tag == "ClimbObj")
             {
 
             }
