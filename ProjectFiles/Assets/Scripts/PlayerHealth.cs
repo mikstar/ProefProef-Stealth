@@ -10,10 +10,6 @@ public class PlayerHealth : MonoBehaviour {
     public bool death = false;
 
     void Update() {
-
         Debug.Log(health);
-        if (death) {
-            Destroy(gameObject);
-        }
     }
 }
