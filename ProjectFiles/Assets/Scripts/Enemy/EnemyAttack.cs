@@ -18,10 +18,8 @@ public class EnemyAttack : MonoBehaviour
         cooldownWaitTime = 5f;
     }
 
-    void Update()
-    {
-        if (cooldown)
-        {
+    void Update(){
+        if (cooldown){
             cooldownTimer += Time.deltaTime;
             if (cooldownTimer > cooldownWaitTime)
             {
@@ -30,18 +28,13 @@ public class EnemyAttack : MonoBehaviour
         }
     }
 
-    void OnTriggerStay(Collider other)
-    {
-        if (other.gameObject == player)
-        {
-            if (cooldown)
-            {
+    void OnTriggerStay(Collider other){
+        if (other.gameObject == player){
+            if (cooldown){
 
             }
-
             else {
-                playerHealth.health -= 50f;
-                cooldown = true;
+                
             }
         }
     }
