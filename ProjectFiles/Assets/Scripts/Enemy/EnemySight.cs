@@ -8,15 +8,25 @@ public class EnemySight : MonoBehaviour {
     public Vector3 personalLastSighting;
 
     private GameObject player;
+    private LastPlayerSighting lastPlayerSighting;
+    private Vector3 previousSighting;
 
-    void Start() {
-        player = GameObject.FindGameObjectWithTag("Tester");
+
+
+    void Awake() {
+        player = GameObject.FindGameObjectWithTag("Player");
+        lastPlayerSighting = GameObject.FindGameObjectWithTag("GameController").GetComponent<LastPlayerSighting>();
+
+        personalLastSighting = lastPlayerSighting.resetPosition;
+        previousSighting = lastPlayerSighting.resetPosition;
     }
 
     void Update() {
-        if (playerInSight) {
-            //Debug.Log("PLAYER IN SIGHT");
+
+        if (lastPlayerSighting.position != previousSighting) {
+            personalLastSighting = lastPlayerSighting.position;
         }
+        previousSighting = lastPlayerSighting.position;
     }
 
     void OnTriggerStay(Collider other)
@@ -27,17 +37,14 @@ public class EnemySight : MonoBehaviour {
             Vector3 direction = other.transform.position - transform.position;
             float angle = Vector3.Angle(direction, transform.forward);
 
-
             if (angle < fieldOfViewAngle * 0.5f && other.transform.position.y < transform.position.y + 0.8f)
             {
-	            RaycastHit hit;
-	                
+	            RaycastHit hit;   
 	            if (Physics.Raycast(transform.position, direction.normalized, out hit, 1000)) {
 
 	                if (hit.collider.gameObject == player) {
-
 						playerInSight = true;
-	                    personalLastSighting = player.transform.position;
+                        lastPlayerSighting.position = player.transform.position;
 	                }
 	            }
             }
