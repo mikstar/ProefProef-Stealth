@@ -9,11 +9,11 @@ public class Char_Movement : MonoBehaviour {
     private bool falling = false;
     private bool hanging = false;
     public float maxSpeed = 4f;
-    public GameObject graficModel;
+    private Vector3 graficModeloffset;
     //public Transform testObj;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         rigbody = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
     }
@@ -44,22 +44,31 @@ public class Char_Movement : MonoBehaviour {
                         velo = velo * (maxSpeed / velo.magnitude);
                         rigbody.velocity = velo;
                         transform.rotation = Quaternion.LookRotation(rigbody.velocity);
+
+                        anim.SetBool("Moving", true);
+                    }
+                    else
+                    {
+                        anim.SetBool("Moving", false);
                     }
 
                     //slip off ledge detection
                     RaycastHit hit;
-                    if (!Physics.Raycast(transform.position, -graficModel.transform.up, out hit, 1))
+                    if (!Physics.Raycast(transform.position +(transform.up*0.5f), -transform.transform.up, out hit, 1))
                     {
+                        //go to fall state
                         falling = true;
                         actionActive = true;
                         rigbody.isKinematic = true;
                         transform.DOMove(transform.position + (transform.forward * 0.5f) - (transform.up * 0.5f), 0.2f).SetEase(Ease.InQuad).OnComplete(droppedPlayer);
+                        anim.SetBool("Moving", false);
+                        Debug.Log("Falling");
                     }
 
                     //Climb ledge detection
                     if (Input.GetButtonDown("Fire3"))
                     {
-                        if (Physics.Raycast(transform.position, graficModel.transform.forward, out hit, 0.75f))
+                        if (Physics.Raycast(transform.position + (transform.up * 0.5f), transform.transform.forward, out hit, 0.75f))
                         {
                             if (hit.collider.gameObject.tag == "ClimbObj")
                             {
@@ -72,10 +81,11 @@ public class Char_Movement : MonoBehaviour {
                                 //now to know the world position of top most level of the wall:
                                 climbPoint.y = (hit.transform.position.y + dimensions.y / 2) - 0.5f;
 
-                                transform.position = climbPoint + (hit.normal / 2);
+                                transform.position = climbPoint + (hit.normal * 0.3f) - new Vector3(0,0.5f,0);
                                 actionActive = true;
                                 rigbody.isKinematic = true;
                                 anim.SetTrigger("ClimbUp");
+                                anim.SetBool("Moving", false);
                             }
                             else if (hit.collider.gameObject.tag == "HangObj")
                             {
@@ -89,28 +99,49 @@ public class Char_Movement : MonoBehaviour {
                                 climbPoint.y = (hit.transform.position.y + dimensions.y / 2) - 0.5f;
 
                                 transform.position = climbPoint + (hit.normal / 2);
-                                //actionActive = true;
                                 rigbody.isKinematic = true;
                                 hanging = true;
+                                anim.SetBool("Moving", false);
                             }
                         }
                     }
                 }
                 else
                 {
-                    //hangstatee
-                    if (Input.GetAxis("Horizontal") < 0)
+                    //hangstate
+
+                    //climb left/right
+                    if (Input.GetAxis("Horizontal") < 0 && !Physics.Raycast(transform.position + (transform.up * 0.5f), -transform.right, 0.5f))
                     {
-                        transform.Translate(-transform.forward * 0.05f);
+                        Debug.DrawRay(transform.position + (-transform.right * 0.5f) + (transform.up * 0.5f), transform.forward*2,Color.green,0.2f);
+                        if (Physics.Raycast(transform.position + (-transform.right * 0.5f) + (transform.up * 0.5f), transform.forward, 0.5f))
+                        {
+                            transform.Translate(-transform.right * 0.03f);
+                        }
                     }
-                    else if (Input.GetAxis("Horizontal") > 0)
+                    else if (Input.GetAxis("Horizontal") > 0 && !Physics.Raycast(transform.position + (transform.up * 0.5f), transform.right, 0.5f))
                     {
-                        transform.Translate(transform.forward* 0.05f);
+                        Debug.DrawRay(transform.position + (transform.right * 0.5f) + (transform.up * 0.5f), transform.forward * 2, Color.green, 0.2f);
+                        if (Physics.Raycast(transform.position + (transform.right * 0.5f) + (transform.up * 0.5f), transform.forward, 0.5f))
+                        {
+                            transform.Translate(transform.right * 0.03f);
+                        }
                     }
 
                     if (Input.GetAxis("Vertical") > 0)
                     {
-
+                        RaycastHit hit;
+                        if (Physics.Raycast(transform.position + (transform.up * 0.5f), transform.transform.forward, out hit, 0.75f))
+                        {
+                            if (hit.collider.gameObject.tag == "ClimbObj")
+                            {
+                                //climb up
+                                actionActive = true;
+                                hanging = false;
+                                rigbody.isKinematic = true;
+                                anim.SetTrigger("ClimbUp");
+                            }
+                        }
                     }
                     else if (Input.GetAxis("Vertical") < 0)
                     {
@@ -125,9 +156,10 @@ public class Char_Movement : MonoBehaviour {
             else
             {
                 RaycastHit hit;
-                if (Physics.Raycast(transform.position, -graficModel.transform.up, out hit))
+                Debug.DrawRay(transform.position + (transform.up * 0.5f), -transform.transform.up, Color.green);
+                if (Physics.Raycast(transform.position + (transform.up * 0.5f), -transform.transform.up * 5, out hit))
                 {
-                    if(hit.distance < 0.55f)
+                    if(hit.distance < 1f)
                     {
                         falling = false;
                     }
@@ -135,10 +167,24 @@ public class Char_Movement : MonoBehaviour {
             }
         }
     }
+    public void resetCharPosX(float offset)
+    {
+        graficModeloffset.x = offset;
+    }
+    public void resetCharPosY(float offset)
+    {
+        graficModeloffset.y = offset;
+    }
+    public void resetCharPosZ(float offset)
+    {
+        graficModeloffset.z = offset;
+    }
     public void resetCharPos()
     {
-        Vector3 tempPos =  graficModel.transform.position;
-        tempPos.y -= 0.17f;
+        Vector3 tempPos = transform.position;
+        tempPos += transform.forward * graficModeloffset.z;
+        tempPos += transform.right * graficModeloffset.x;
+        tempPos += transform.up * graficModeloffset.y;
         transform.position = tempPos;
         
         actionActive = false;
