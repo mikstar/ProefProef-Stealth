@@ -11,8 +11,6 @@ public class EnemySight : MonoBehaviour {
     private LastPlayerSighting lastPlayerSighting;
     private Vector3 previousSighting;
 
-
-
     void Awake() {
         player = GameObject.FindGameObjectWithTag("Player");
         lastPlayerSighting = GameObject.FindGameObjectWithTag("GameController").GetComponent<LastPlayerSighting>();
@@ -29,8 +27,7 @@ public class EnemySight : MonoBehaviour {
         previousSighting = lastPlayerSighting.position;
     }
 
-    void OnTriggerStay(Collider other)
-    {
+    void OnTriggerStay(Collider other){
         if (other.gameObject == player)
         {
             playerInSight = false;
