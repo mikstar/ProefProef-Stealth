@@ -10,6 +10,7 @@ public class Char_Movement : MonoBehaviour {
     private bool hanging = false;
     public float maxSpeed = 4f;
     private Vector3 graficModeloffset;
+    public Transform camCenterObj;
     //public Transform testObj;
 
     // Use this for initialization
@@ -62,7 +63,7 @@ public class Char_Movement : MonoBehaviour {
                         rigbody.isKinematic = true;
                         transform.DOMove(transform.position + (transform.forward * 0.5f) - (transform.up * 0.5f), 0.2f).SetEase(Ease.InQuad).OnComplete(droppedPlayer);
                         anim.SetBool("Moving", false);
-                        Debug.Log("Falling");
+                        anim.SetBool("Falling", true);
                     }
 
                     //Climb ledge detection
@@ -80,8 +81,8 @@ public class Char_Movement : MonoBehaviour {
                                 Vector3 dimensions = new Vector3(length, height, width);
                                 //now to know the world position of top most level of the wall:
                                 climbPoint.y = (hit.transform.position.y + dimensions.y / 2) - 0.5f;
-
-                                transform.position = climbPoint + (hit.normal * 0.3f) - new Vector3(0,0.5f,0);
+                                camCenterObj.DOLocalMove(new Vector3(0, 1, 0.4f), 1);
+                                transform.position = climbPoint + (hit.normal * 0.2f) - new Vector3(0,0.5f,0);
                                 actionActive = true;
                                 rigbody.isKinematic = true;
                                 anim.SetTrigger("ClimbUp");
@@ -98,9 +99,10 @@ public class Char_Movement : MonoBehaviour {
                                 //now to know the world position of top most level of the wall:
                                 climbPoint.y = (hit.transform.position.y + dimensions.y / 2) - 0.5f;
 
-                                transform.position = climbPoint + (hit.normal / 2);
+                                transform.position = climbPoint + (hit.normal * 0.2f) - new Vector3(0, 0.5f, 0);
                                 rigbody.isKinematic = true;
                                 hanging = true;
+                                anim.SetTrigger("GrabUpToLedge");
                                 anim.SetBool("Moving", false);
                             }
                         }
@@ -113,19 +115,25 @@ public class Char_Movement : MonoBehaviour {
                     //climb left/right
                     if (Input.GetAxis("Horizontal") < 0 && !Physics.Raycast(transform.position + (transform.up * 0.5f), -transform.right, 0.5f))
                     {
-                        Debug.DrawRay(transform.position + (-transform.right * 0.5f) + (transform.up * 0.5f), transform.forward*2,Color.green,0.2f);
-                        if (Physics.Raycast(transform.position + (-transform.right * 0.5f) + (transform.up * 0.5f), transform.forward, 0.5f))
+                        Debug.DrawRay(transform.position + (-transform.right * 0.5f) + (transform.up * 0.4f), transform.forward/2,Color.green,0.2f);
+                        if (Physics.Raycast(transform.position + (-transform.right * 0.5f) + (transform.up * 0.4f), transform.forward, 0.7f))
                         {
-                            transform.Translate(-transform.right * 0.03f);
+                            transform.Translate(-transform.right * 0.015f);
+                            anim.SetBool("Moving", true);
                         }
                     }
                     else if (Input.GetAxis("Horizontal") > 0 && !Physics.Raycast(transform.position + (transform.up * 0.5f), transform.right, 0.5f))
                     {
-                        Debug.DrawRay(transform.position + (transform.right * 0.5f) + (transform.up * 0.5f), transform.forward * 2, Color.green, 0.2f);
-                        if (Physics.Raycast(transform.position + (transform.right * 0.5f) + (transform.up * 0.5f), transform.forward, 0.5f))
+                        Debug.DrawRay(transform.position + (transform.right * 0.5f) + (transform.up * 0.4f), transform.forward /2, Color.green, 0.2f);
+                        if (Physics.Raycast(transform.position + (transform.right * 0.5f) + (transform.up * 0.4f), transform.forward, 0.7f))
                         {
-                            transform.Translate(transform.right * 0.03f);
+                            transform.Translate(transform.right * 0.015f);
+                            anim.SetBool("Moving", true);
                         }
+                    }
+                    else
+                    {
+                        anim.SetBool("Moving", false);
                     }
 
                     if (Input.GetAxis("Vertical") > 0)
@@ -139,16 +147,20 @@ public class Char_Movement : MonoBehaviour {
                                 actionActive = true;
                                 hanging = false;
                                 rigbody.isKinematic = true;
+                                anim.SetBool("Moving", false);
                                 anim.SetTrigger("ClimbUp");
+                                camCenterObj.DOLocalMove(new Vector3(0, 1, 0.4f), 1);
                             }
                         }
                     }
                     else if (Input.GetAxis("Vertical") < 0)
                     {
-                        Debug.Log("Drop");
 
                         hanging = false;
                         falling = true;
+                        anim.SetBool("Falling", true);
+                        anim.SetBool("FallNow", true);
+                        anim.SetBool("Moving", false);
                         rigbody.isKinematic = false;
                     }
                 }
@@ -162,6 +174,7 @@ public class Char_Movement : MonoBehaviour {
                     if(hit.distance < 1f)
                     {
                         falling = false;
+                        anim.SetBool("Falling", false);
                     }
                 }
             }
@@ -186,6 +199,7 @@ public class Char_Movement : MonoBehaviour {
         tempPos += transform.right * graficModeloffset.x;
         tempPos += transform.up * graficModeloffset.y;
         transform.position = tempPos;
+        camCenterObj.position = transform.position;
         
         actionActive = false;
         rigbody.isKinematic = false;
