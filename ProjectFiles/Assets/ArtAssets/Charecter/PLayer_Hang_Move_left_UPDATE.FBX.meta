@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: d03316e3731eae0499d6eb6a0d45778b
-timeCreated: 1457694767
+guid: 6c634a8da628666458023e327117f340
+timeCreated: 1458213817
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -105,7 +105,7 @@ ModelImporter:
     4300010: Group25160
     4300012: Group41679
     4300014: Group10694
-    7400000: HangMoveRight
+    7400000: HangMoveLeft
     9500000: //RootNode
     13700000: Group10694
     13700002: Group25160
@@ -136,7 +136,7 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: HangMoveRight
+      name: HangMoveLeft
       takeName: Take 001
       firstFrame: 0
       lastFrame: 40

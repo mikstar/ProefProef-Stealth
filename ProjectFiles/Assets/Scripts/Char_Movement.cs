@@ -10,6 +10,7 @@ public class Char_Movement : MonoBehaviour {
     private bool hanging = false;
     public float maxSpeed = 4f;
     private Vector3 graficModeloffset;
+    private Vector3 graficModeloffsetRotation;
     public Transform camCenterObj;
     //public Transform testObj;
 
@@ -22,12 +23,16 @@ public class Char_Movement : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
 
+        Debug.DrawRay(transform.position + (-transform.right * 0.5f) + (transform.up * 0.4f), transform.forward / 2, Color.green, 0.2f);
+
         if (!actionActive)
         {
             if (!falling)
             {
                 if (!hanging)
                 {
+
+                    Debug.DrawRay(transform.position + (transform.up * 0.5f) + (transform.forward*0.5f), -transform.up, Color.green, 0.2f);
                     //normal walking state
 
                     //set movement by input
@@ -69,6 +74,7 @@ public class Char_Movement : MonoBehaviour {
                     //Climb ledge detection
                     if (Input.GetButtonDown("Fire3"))
                     {
+                        //ClimbUpCheck
                         if (Physics.Raycast(transform.position + (transform.up * 0.5f), transform.transform.forward, out hit, 0.75f))
                         {
                             if (hit.collider.gameObject.tag == "ClimbObj")
@@ -102,9 +108,20 @@ public class Char_Movement : MonoBehaviour {
                                 transform.position = climbPoint + (hit.normal * 0.2f) - new Vector3(0, 0.5f, 0);
                                 rigbody.isKinematic = true;
                                 hanging = true;
+                                actionActive = true;
                                 anim.SetTrigger("GrabUpToLedge");
                                 anim.SetBool("Moving", false);
                             }
+                        }
+                        else if (!Physics.Raycast(transform.position + (transform.up * 0.5f) + (transform.forward*0.5f), -transform.up, 0.75f))
+                        {
+                            Debug.Log("ClimbDown");
+
+                            hanging = true;
+                            actionActive = true;
+                            rigbody.isKinematic = true;
+                            anim.SetTrigger("ClimbDown");
+                            anim.SetBool("Moving", false);
                         }
                     }
                 }
@@ -115,11 +132,12 @@ public class Char_Movement : MonoBehaviour {
                     //climb left/right
                     if (Input.GetAxis("Horizontal") < 0 && !Physics.Raycast(transform.position + (transform.up * 0.5f), -transform.right, 0.5f))
                     {
-                        Debug.DrawRay(transform.position + (-transform.right * 0.5f) + (transform.up * 0.4f), transform.forward/2,Color.green,0.2f);
                         if (Physics.Raycast(transform.position + (-transform.right * 0.5f) + (transform.up * 0.4f), transform.forward, 0.7f))
                         {
-                            transform.Translate(-transform.right * 0.015f);
+                            transform.position += -transform.right * 0.015f;
                             anim.SetBool("Moving", true);
+                            anim.SetBool("ClimbingLeft", true);
+                            
                         }
                     }
                     else if (Input.GetAxis("Horizontal") > 0 && !Physics.Raycast(transform.position + (transform.up * 0.5f), transform.right, 0.5f))
@@ -127,8 +145,9 @@ public class Char_Movement : MonoBehaviour {
                         Debug.DrawRay(transform.position + (transform.right * 0.5f) + (transform.up * 0.4f), transform.forward /2, Color.green, 0.2f);
                         if (Physics.Raycast(transform.position + (transform.right * 0.5f) + (transform.up * 0.4f), transform.forward, 0.7f))
                         {
-                            transform.Translate(transform.right * 0.015f);
+                            transform.position += transform.right * 0.015f;
                             anim.SetBool("Moving", true);
+                            anim.SetBool("ClimbingLeft", false);
                         }
                     }
                     else
@@ -167,11 +186,11 @@ public class Char_Movement : MonoBehaviour {
             }
             else
             {
+                //Falling
                 RaycastHit hit;
-                Debug.DrawRay(transform.position + (transform.up * 0.5f), -transform.transform.up, Color.green);
                 if (Physics.Raycast(transform.position + (transform.up * 0.5f), -transform.transform.up * 5, out hit))
                 {
-                    if(hit.distance < 1f)
+                    if(hit.distance < 0.55f)
                     {
                         falling = false;
                         anim.SetBool("Falling", false);
@@ -192,17 +211,42 @@ public class Char_Movement : MonoBehaviour {
     {
         graficModeloffset.z = offset;
     }
+    public void resetCharRotaX(float offset)
+    {
+        graficModeloffsetRotation.x = offset;
+    }
+    public void resetCharRotaY(float offset)
+    {
+        graficModeloffsetRotation.y = offset;
+    }
+    public void resetCharRotaZ(float offset)
+    {
+        graficModeloffsetRotation.z = offset;
+    }
     public void resetCharPos()
     {
+        resetCharPosStayStatic();
+        rigbody.isKinematic = false;
+    }
+    public void resetCharPosStayStatic()
+    {
+        Debug.Log("Reset");
         Vector3 tempPos = transform.position;
         tempPos += transform.forward * graficModeloffset.z;
         tempPos += transform.right * graficModeloffset.x;
         tempPos += transform.up * graficModeloffset.y;
         transform.position = tempPos;
         camCenterObj.position = transform.position;
-        
+        transform.Rotate(graficModeloffsetRotation);
+
         actionActive = false;
-        rigbody.isKinematic = false;
+
+        graficModeloffset = Vector3.zero;
+        graficModeloffsetRotation = Vector3.zero;
+    }
+    public void actionDone()
+    {
+        actionActive = false;
     }
 
     public void droppedPlayer()
