@@ -28,7 +28,9 @@ public class EnemyAI : MonoBehaviour {
     private LastPlayerSighting lastPlayerSighting;
 
     private Animator anim;
+    private bool chasing;
 
+    private EnemyAttack enemAttack;
     
 
     void Awake() {
@@ -38,72 +40,90 @@ public class EnemyAI : MonoBehaviour {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         playerHealth = player.GetComponent<PlayerHealth>();
         anim = animObj.GetComponent<Animator>();
-
+        enemAttack = transform.Find("SmackZone").gameObject.GetComponent<EnemyAttack>();
     }
 
     void Update() {
-       // if (enemySight.playerInSight && playerHealth.health > 0f)
-       // {
-        //    Engaging();
-        //}
+ 
         if(enemySight.personalLastSighting != lastPlayerSighting.resetPosition && playerHealth.health > 0f )
         {
             Chasing();
         }
+
         else {
             Patrolling();
         }
     }
     void Engaging() {
+        if(chasing == false) { 
             Vector3 sightingDeltaPos = enemySight.personalLastSighting - transform.position;
             Quaternion muhrotation = Quaternion.LookRotation(sightingDeltaPos);
             Quaternion currentRot = transform.localRotation;
 
+            anim.SetBool("Walking", false);
+            anim.SetBool("Alert", true);
             nav.speed = 0f;
-            transform.localRotation = Quaternion.Lerp(currentRot, muhrotation, Time.deltaTime * 4f);
-            engageTimer += Time.deltaTime;
-            eMark.gameObject.SetActive(true);
 
-        if (engageTimer > engageWaitTime)
-        {
-            Chasing();
+            transform.localRotation = Quaternion.Lerp(currentRot, muhrotation, Time.deltaTime * 4f);
+
+            engageTimer += Time.deltaTime;
+            
+            if (engageTimer > engageWaitTime)
+            {
+                anim.SetBool("Alert", false);
+                chasing = true;
+            }
         }
     }
  
     void Chasing() {
-        Debug.Log("Chasing");
+        anim.SetBool("Walking", false);
+        anim.SetBool("Running", true);
+
         Vector3 sightingDeltaPos = enemySight.personalLastSighting - transform.position;
 
-        if (sightingDeltaPos.sqrMagnitude > 4f){
+        if (sightingDeltaPos.sqrMagnitude > 2f){
              nav.destination = enemySight.personalLastSighting;
              nav.speed = chaseSpeed;
         }
  
          if (nav.remainingDistance < nav.stoppingDistance){
-             chaseTimer += Time.deltaTime;
-             if (chaseTimer > chaseWaitTime){
-                Debug.Log("done chasing");
+            anim.SetBool("Running", false);
+
+            if (enemAttack.playerInRange)
+            {
+                anim.SetTrigger("Smack");
+            }
+
+            chaseTimer += Time.deltaTime;
+
+            if (enemySight.playerInSight == false) { 
+                if (chaseTimer > chaseWaitTime)
+                {
+                    chasing = false;
                     lastPlayerSighting.position = lastPlayerSighting.resetPosition;
                     enemySight.personalLastSighting = lastPlayerSighting.resetPosition;
                     chaseTimer = 0f;
                     engageTimer = 0f;
-                    eMark.gameObject.SetActive(false);
-
+                
                  }
-             }
+            }
+        }
          else {
                  chaseTimer = 0f;
          }  
       }
 
     void Patrolling() {
-        Debug.Log("Patrolling");
+        
         nav.speed = patrolSpeed;
-        anim.SetTrigger("Patrolling");
+        anim.SetBool("Walking", true);
         
         if (nav.destination == lastPlayerSighting.resetPosition || nav.remainingDistance < nav.stoppingDistance){
-            anim.SetTrigger("Waiting");
+
+            anim.SetBool("Walking", false);
             patrolTimer += Time.deltaTime;
+          
 
             if (patrolTimer > patrolWaitTime)
             {
