@@ -1,4 +1,8 @@
 sceneSetups:
+<<<<<<< HEAD
 - path: Assets/Scenes/Development_Scenes/DevScene_Coen.unity
+=======
+- path: Assets/Scenes/titleMenu.unity
+>>>>>>> origin/master
   isLoaded: 1
   isActive: 1
