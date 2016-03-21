@@ -45,6 +45,7 @@ public class EnemyAI : MonoBehaviour {
 
     void Update() {
  
+
         if(enemySight.personalLastSighting != lastPlayerSighting.resetPosition && playerHealth.health > 0f )
         {
             Chasing();
@@ -82,36 +83,35 @@ public class EnemyAI : MonoBehaviour {
 
         Vector3 sightingDeltaPos = enemySight.personalLastSighting - transform.position;
 
-        if (sightingDeltaPos.sqrMagnitude > 2f){
-             nav.destination = enemySight.personalLastSighting;
-             nav.speed = chaseSpeed;
-        }
+        if (sightingDeltaPos.sqrMagnitude > 4f)
+			nav.destination = enemySight.personalLastSighting;
+
+		nav.speed = chaseSpeed;
+        
  
-         if (nav.remainingDistance < nav.stoppingDistance){
+        if (nav.remainingDistance < nav.stoppingDistance){
             anim.SetBool("Running", false);
 
-            if (enemAttack.playerInRange)
-            {
-                anim.SetTrigger("Smack");
-            }
+            //if (enemAttack.playerInRange)
+            //{
+                //anim.SetTrigger("Smack");
+            //}
 
             chaseTimer += Time.deltaTime;
 
-            if (enemySight.playerInSight == false) { 
-                if (chaseTimer > chaseWaitTime)
-                {
-                    chasing = false;
+            //if (enemySight.playerInSight == false) { 
+				Debug.Log("I DONT SEE U ANYMORE");
+                if (chaseTimer >= chaseWaitTime)
+                {    
                     lastPlayerSighting.position = lastPlayerSighting.resetPosition;
                     enemySight.personalLastSighting = lastPlayerSighting.resetPosition;
                     chaseTimer = 0f;
-                    engageTimer = 0f;
-                
-                 }
-            }
-        }
-         else {
-                 chaseTimer = 0f;
-         }  
+                   
+                }
+            //}
+        }else 
+			chaseTimer = 0f;
+          
       }
 
     void Patrolling() {
@@ -125,7 +125,7 @@ public class EnemyAI : MonoBehaviour {
             patrolTimer += Time.deltaTime;
           
 
-            if (patrolTimer > patrolWaitTime)
+            if (patrolTimer >= patrolWaitTime)
             {
                 if (waypointIndex == patrolWaypoints.Length - 1)
                     waypointIndex = 0;
