@@ -44,16 +44,10 @@ public class EnemyAI : MonoBehaviour {
     }
 
     void Update() {
- 
-
-        if(enemySight.personalLastSighting != lastPlayerSighting.resetPosition && playerHealth.health > 0f )
-        {
+        if(enemySight.personalLastSighting != lastPlayerSighting.resetPosition && playerHealth.health > 0f)
             Chasing();
-        }
-
-        else {
+        else 
             Patrolling();
-        }
     }
     void Engaging() {
         if(chasing == false) { 
@@ -83,24 +77,26 @@ public class EnemyAI : MonoBehaviour {
 
         Vector3 sightingDeltaPos = enemySight.personalLastSighting - transform.position;
 
-        if (sightingDeltaPos.sqrMagnitude > 4f)
-			nav.destination = enemySight.personalLastSighting;
-
-		nav.speed = chaseSpeed;
+        //if (sightingDeltaPos.sqrMagnitude > 4f)
+		nav.destination = enemySight.personalLastSighting;
+        nav.speed = chaseSpeed;
         
  
         if (nav.remainingDistance < nav.stoppingDistance){
             anim.SetBool("Running", false);
 
-            //if (enemAttack.playerInRange)
-            //{
-                //anim.SetTrigger("Smack");
-            //}
+            if (enemAttack.playerInRange)
+            {
+
+                anim.SetTrigger("Smack");
+                if (playerHealth.health >= 100f)
+                    playerHealth.health = 0f;
+            }
 
             chaseTimer += Time.deltaTime;
 
             //if (enemySight.playerInSight == false) { 
-				Debug.Log("I DONT SEE U ANYMORE");
+				
                 if (chaseTimer >= chaseWaitTime)
                 {    
                     lastPlayerSighting.position = lastPlayerSighting.resetPosition;

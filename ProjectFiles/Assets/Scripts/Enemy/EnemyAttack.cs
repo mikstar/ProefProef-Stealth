@@ -24,6 +24,7 @@ public class EnemyAttack : MonoBehaviour
     void OnTriggerStay(Collider other){
         if (other.gameObject == player){
             playerInRange = true;
+            player.SetActive(false);
         }
     }
     void OnTriggerExit(Collider other) {
