@@ -39,7 +39,7 @@ public class EnemySight : MonoBehaviour {
             Vector3 direction = playerPos - transform.position;
             float angle = Vector3.Angle(direction, transform.forward);
 
-            if (angle < fieldOfViewAngle * 0.5f && other.transform.position.y < transform.position.y + 0.8f)
+            if (angle < fieldOfViewAngle * 0.5f && playerPos.y < transform.position.y + 0.8f)
             {
 	            RaycastHit hit;   
 
