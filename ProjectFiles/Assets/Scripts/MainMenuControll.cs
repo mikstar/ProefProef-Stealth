@@ -8,7 +8,6 @@ public class MainMenuControll : MonoBehaviour {
     public Transform camObj;
 
     public RectTransform TitleIcon;
-    public 
     public RectTransform startBut;
     public RectTransform quitBut;
     public RectTransform quitButY;

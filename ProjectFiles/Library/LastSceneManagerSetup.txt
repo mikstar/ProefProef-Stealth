@@ -1,8 +1,4 @@
 sceneSetups:
-<<<<<<< HEAD
 - path: Assets/Scenes/titleMenu.unity
-=======
-- path: Assets/Scenes/Development_Scenes/ArtScene_pieter2_backup.unity
->>>>>>> 498007902240df0b39ae8a2acb226437af2bb540
   isLoaded: 1
   isActive: 1
