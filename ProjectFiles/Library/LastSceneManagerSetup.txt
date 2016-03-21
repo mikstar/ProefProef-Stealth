@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/Development_Scenes/Sce_DevScene_Mike.unity
+- path: Assets/Scenes/titleMenu.unity
   isLoaded: 1
   isActive: 1
