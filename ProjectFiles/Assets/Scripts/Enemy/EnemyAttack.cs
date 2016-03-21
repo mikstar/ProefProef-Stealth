@@ -3,6 +3,7 @@ using System.Collections;
 
 public class EnemyAttack : MonoBehaviour
 {
+    public bool playerInRange;
 
     private GameObject player;
     private PlayerHealth playerHealth;
@@ -14,28 +15,23 @@ public class EnemyAttack : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player");
         playerHealth = player.GetComponent<PlayerHealth>();
-
-        cooldownWaitTime = 5f;
     }
 
     void Update(){
-        if (cooldown){
-            cooldownTimer += Time.deltaTime;
-            if (cooldownTimer > cooldownWaitTime)
-            {
-                cooldown = false;
-            }
-        }
+     
     }
 
     void OnTriggerStay(Collider other){
         if (other.gameObject == player){
-            if (cooldown){
-
-            }
-            else {
-                
-            }
+            playerInRange = true;
+            player.SetActive(false);
         }
     }
+    void OnTriggerExit(Collider other) {
+        if (other.gameObject == player)
+        {
+            playerInRange = false;
+        }
+    }
+
 }
