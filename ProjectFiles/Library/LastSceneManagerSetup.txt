@@ -1,4 +1,12 @@
 sceneSetups:
+<<<<<<< HEAD
 - path: Assets/Scenes/Development_Scenes/Sce_DevScene_Mike.unity
+=======
+<<<<<<< HEAD
+- path: Assets/Scenes/Development_Scenes/DevScene_Coen.unity
+=======
+- path: Assets/Scenes/titleMenu.unity
+>>>>>>> origin/master
+>>>>>>> 299f82aedcb883b3454e33468c81b7087b456e35
   isLoaded: 1
   isActive: 1
