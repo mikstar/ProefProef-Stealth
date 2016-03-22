@@ -8,6 +8,7 @@ public class MainMenuControll : MonoBehaviour {
     public Transform camObj;
 
     public RectTransform TitleIcon;
+    public RectTransform TitleText;
     public RectTransform startBut;
     public RectTransform quitBut;
     public RectTransform quitButY;
@@ -29,6 +30,7 @@ public class MainMenuControll : MonoBehaviour {
     private void fadeTitle()
     {
         TitleIcon.gameObject.GetComponent<Image>().DOFade(1, 1);
+        TitleText.gameObject.GetComponent<Text>().DOFade(1, 1).SetDelay(0.5f);
         started = false;
     }
 
@@ -46,6 +48,7 @@ public class MainMenuControll : MonoBehaviour {
         TitleIcon.DOAnchorPosY((Screen.height*0.65f) - (Screen.height/2), 1);
         startBut.DOAnchorPosY((Screen.height * 0.4f) - (Screen.height / 2), 1);
         quitBut.DOAnchorPosY((Screen.height * 0.3f) - (Screen.height / 2), 1);
+        TitleText.gameObject.GetComponent<Text>().DOFade(0, 0.5f);
 
         quitButY.DOAnchorPosX((Screen.width * -0.3f) - (Screen.width / 2), 1);
         quitButN.DOAnchorPosX((Screen.width * 1.3f) - (Screen.width / 2), 1);

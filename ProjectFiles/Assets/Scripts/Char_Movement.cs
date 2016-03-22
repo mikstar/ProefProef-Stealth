@@ -286,4 +286,10 @@ public class Char_Movement : MonoBehaviour {
         rigbody.isKinematic = false;
         rigbody.velocity = new Vector3(0,-4,0);
     }
+
+    public void killPlayer()
+    {
+        actionActive = true;
+        rigbody.isKinematic = true;
+    }
 }
