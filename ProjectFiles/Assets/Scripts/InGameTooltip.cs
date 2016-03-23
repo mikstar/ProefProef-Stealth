@@ -15,7 +15,6 @@ public class InGameTooltip : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        Debug.Log(size);
         float i = Mathf.Lerp(size, tooltipImg.transform.localScale.y,0.8f);
         tooltipImg.transform.localScale = new Vector3(-i,i,i);
         tooltipImg.transform.LookAt(Camera.main.transform);

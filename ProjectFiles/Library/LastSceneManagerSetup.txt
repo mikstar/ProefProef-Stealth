@@ -1,8 +1,4 @@
 sceneSetups:
-<<<<<<< HEAD
 - path: Assets/Scenes/titleMenu.unity
-=======
-- path: Assets/Scenes/Development_Scenes/ArtScene_pieter.unity
->>>>>>> 7ba5452bbf992424ba00ece6a1207ab6945ad53e
   isLoaded: 1
   isActive: 1
