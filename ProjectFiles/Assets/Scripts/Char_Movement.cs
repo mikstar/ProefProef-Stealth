@@ -291,5 +291,6 @@ public class Char_Movement : MonoBehaviour {
     {
         actionActive = true;
         rigbody.isKinematic = true;
+        anim.ResetTrigger("Dead");
     }
 }

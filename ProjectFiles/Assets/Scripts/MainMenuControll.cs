@@ -45,7 +45,7 @@ public class MainMenuControll : MonoBehaviour {
     
     public void toMenu()
     {
-        TitleIcon.DOAnchorPosY((Screen.height*0.65f) - (Screen.height/2), 1);
+        TitleIcon.DOAnchorPosY((Screen.height*0.5f) - (Screen.height/2), 1);
         startBut.DOAnchorPosY((Screen.height * 0.4f) - (Screen.height / 2), 1);
         quitBut.DOAnchorPosY((Screen.height * 0.3f) - (Screen.height / 2), 1);
         TitleText.gameObject.GetComponent<Text>().DOFade(0, 0.5f);
@@ -61,12 +61,12 @@ public class MainMenuControll : MonoBehaviour {
     public void startGame()
     {
 
-        TitleIcon.DOAnchorPosY((Screen.height * 1.3f) - (Screen.height / 2), 1);
+        TitleIcon.DOAnchorPosY((Screen.height * 1.6f) - (Screen.height / 2), 1);
         startBut.DOAnchorPosY((Screen.height * -0.3f) - (Screen.height / 2), 1);
         quitBut.DOAnchorPosY((Screen.height * -0.3f) - (Screen.height / 2), 1);
 
-        Camera.main.GetComponent<Camfade>().fadeOut();
-        //Camera.main.GetComponent<Camfade>().fadeOutNewScene(1);
+        //Camera.main.GetComponent<Camfade>().fadeOut();
+        Camera.main.GetComponent<Camfade>().fadeOutNewScene(1);
     }
 
     public void endGame()
@@ -76,7 +76,7 @@ public class MainMenuControll : MonoBehaviour {
 
     public void toExitScreen()
     {
-        TitleIcon.DOAnchorPosY((Screen.height * 1.3f) - (Screen.height / 2), 1);
+        TitleIcon.DOAnchorPosY((Screen.height * 1.6f) - (Screen.height / 2), 1);
         startBut.DOAnchorPosY((-Screen.height * 0.2f) - (Screen.height / 2), 1);
         quitBut.DOAnchorPosY((-Screen.height * 0.2f) - (Screen.height / 2), 1);
 
