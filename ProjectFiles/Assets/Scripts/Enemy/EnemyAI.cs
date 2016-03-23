@@ -15,11 +15,15 @@ public class EnemyAI : MonoBehaviour {
     public GameObject qMark;
     public GameObject animObj;
 
+    public AudioClip spotted;
+
+
     //Private
     private EnemySight enemySight;
     private NavMeshAgent nav;
     private Transform player;
     private PlayerHealth playerHealth;
+    private Char_Movement playerMovement;
 
     private float chaseTimer;
     private float patrolTimer;
@@ -27,8 +31,10 @@ public class EnemyAI : MonoBehaviour {
     private int waypointIndex;
     private LastPlayerSighting lastPlayerSighting;
 
+    private AudioSource audio;
+
     private Animator anim;
-    private bool chasing;
+
 
     private EnemyAttack enemAttack;
     
@@ -39,39 +45,46 @@ public class EnemyAI : MonoBehaviour {
         lastPlayerSighting = GameObject.FindGameObjectWithTag("GameController").GetComponent<LastPlayerSighting>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         playerHealth = player.GetComponent<PlayerHealth>();
+        playerMovement = player.GetComponent<Char_Movement>();
         anim = animObj.GetComponent<Animator>();
+        audio = GetComponent<AudioSource>();
         enemAttack = transform.Find("SmackZone").gameObject.GetComponent<EnemyAttack>();
     }
 
     void Update() {
         if(enemySight.personalLastSighting != lastPlayerSighting.resetPosition && playerHealth.health > 0f)
             Chasing();
+         
+            
         else 
             Patrolling();
+
+        
     }
-    void Engaging() {
-        if(chasing == false) { 
-            Vector3 sightingDeltaPos = enemySight.personalLastSighting - transform.position;
-            Quaternion muhrotation = Quaternion.LookRotation(sightingDeltaPos);
-            Quaternion currentRot = transform.localRotation;
+    //void Engaging() {
+    //    if(chasing == false) { 
+    //        Vector3 sightingDeltaPos = enemySight.personalLastSighting - transform.position;
+    //        Quaternion muhrotation = Quaternion.LookRotation(sightingDeltaPos);
+    //        Quaternion currentRot = transform.localRotation;
 
-            anim.SetBool("Walking", false);
-            anim.SetBool("Alert", true);
-            nav.speed = 0f;
+    //        anim.SetBool("Walking", false);
+    //        anim.SetBool("Alert", true);
+    //        nav.speed = 0f;
 
-            transform.localRotation = Quaternion.Lerp(currentRot, muhrotation, Time.deltaTime * 4f);
+    //        transform.localRotation = Quaternion.Lerp(currentRot, muhrotation, Time.deltaTime * 4f);
 
-            engageTimer += Time.deltaTime;
+    //        engageTimer += Time.deltaTime;
             
-            if (engageTimer > engageWaitTime)
-            {
-                anim.SetBool("Alert", false);
-                chasing = true;
-            }
-        }
-    }
+    //        if (engageTimer > engageWaitTime)
+    //        {
+    //            anim.SetBool("Alert", false);
+    //            chasing = true;
+    //        }
+    //    }
+    //}
  
     void Chasing() {
+        
         anim.SetBool("Walking", false);
         anim.SetBool("Running", true);
 
@@ -80,18 +93,19 @@ public class EnemyAI : MonoBehaviour {
         //if (sightingDeltaPos.sqrMagnitude > 4f)
 		nav.destination = enemySight.personalLastSighting;
         nav.speed = chaseSpeed;
-        
- 
+
+
+        if (enemAttack.playerInRange && playerHealth.health >= 100f)
+        {
+            anim.SetTrigger("Smack");
+            playerMovement.killPlayer();
+            playerHealth.health = 0f;
+        }
+
         if (nav.remainingDistance < nav.stoppingDistance){
             anim.SetBool("Running", false);
 
-            if (enemAttack.playerInRange)
-            {
-
-                anim.SetTrigger("Smack");
-                if (playerHealth.health >= 100f)
-                    playerHealth.health = 0f;
-            }
+          
 
             chaseTimer += Time.deltaTime;
 
@@ -113,6 +127,7 @@ public class EnemyAI : MonoBehaviour {
     void Patrolling() {
         
         nav.speed = patrolSpeed;
+        anim.SetBool("Running", false);
         anim.SetBool("Walking", true);
         
         if (nav.destination == lastPlayerSighting.resetPosition || nav.remainingDistance < nav.stoppingDistance){

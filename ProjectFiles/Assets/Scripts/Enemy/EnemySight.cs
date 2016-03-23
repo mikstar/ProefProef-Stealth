@@ -44,13 +44,12 @@ public class EnemySight : MonoBehaviour {
 	            RaycastHit hit;   
 
 	            if (Physics.Raycast(transform.position, direction.normalized, out hit, col.radius)) {
-                    Debug.Log(hit.collider.name);
-                    Debug.DrawRay(transform.position, direction.normalized, Color.green);
+
 
 	                if (hit.collider.gameObject.tag == "Player") {
 						playerInSight = true;
                         lastPlayerSighting.position = player.transform.position;
-                        Debug.Log("i can see you");
+                    
 	                }
 	            }
             }
