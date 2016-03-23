@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public class Char_Movement : MonoBehaviour {
     private Rigidbody rigbody;
@@ -296,5 +297,10 @@ public class Char_Movement : MonoBehaviour {
         rigbody.isKinematic = true;
         anim.SetTrigger("Dead");
         health.health = 0f;
+    }
+
+    public void endDeath()
+    {
+        Camera.main.GetComponent<Camfade>().fadeOutNewScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

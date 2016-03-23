@@ -1,4 +1,8 @@
 sceneSetups:
+<<<<<<< HEAD
+- path: Assets/Scenes/Development_Scenes/Sce_DevScene_Mike.unity
+=======
 - path: Assets/Scenes/Development_Scenes/ArtScene_pieter.unity
+>>>>>>> 4aaace3770df23489b383878d3d0560e6b2679fc
   isLoaded: 1
   isActive: 1
