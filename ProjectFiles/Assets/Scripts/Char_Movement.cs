@@ -13,10 +13,13 @@ public class Char_Movement : MonoBehaviour {
     private Vector3 graficModeloffset;
     private Vector3 graficModeloffsetRotation;
     public Transform camCenterObj;
+
+    private PlayerHealth health;
     //public Transform testObj;
 
     // Use this for initialization
     void Start () {
+        health = GetComponent<PlayerHealth>();
         rigbody = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
     }
@@ -293,6 +296,7 @@ public class Char_Movement : MonoBehaviour {
         actionActive = true;
         rigbody.isKinematic = true;
         anim.SetTrigger("Dead");
+        health.health = 0f;
     }
 
     public void endDeath()
