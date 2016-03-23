@@ -14,10 +14,7 @@ public class EnemyAI : MonoBehaviour {
     public GameObject eMark;
     public GameObject qMark;
     public GameObject animObj;
-
-    public AudioClip spotted;
-
-
+    
     //Private
     private EnemySight enemySight;
     private NavMeshAgent nav;
@@ -34,7 +31,6 @@ public class EnemyAI : MonoBehaviour {
     private AudioSource audio;
 
     private Animator anim;
-
 
     private EnemyAttack enemAttack;
     
@@ -54,8 +50,7 @@ public class EnemyAI : MonoBehaviour {
     void Update() {
         if(enemySight.personalLastSighting != lastPlayerSighting.resetPosition && playerHealth.health > 0f)
             Chasing();
-         
-            
+                   
         else 
             Patrolling();
 
@@ -94,18 +89,14 @@ public class EnemyAI : MonoBehaviour {
 		nav.destination = enemySight.personalLastSighting;
         nav.speed = chaseSpeed;
 
-
-        if (enemAttack.playerInRange && playerHealth.health >= 100f)
+        if (enemAttack.playerInRange)
         {
             anim.SetTrigger("Smack");
-            playerMovement.killPlayer();
-            playerHealth.health = 0f;
         }
+
 
         if (nav.remainingDistance < nav.stoppingDistance){
             anim.SetBool("Running", false);
-
-          
 
             chaseTimer += Time.deltaTime;
 

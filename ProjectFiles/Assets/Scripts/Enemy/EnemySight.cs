@@ -6,17 +6,22 @@ public class EnemySight : MonoBehaviour {
     public float fieldOfViewAngle = 110f;
     public bool playerInSight;
     public Vector3 personalLastSighting;
+    public AudioClip spotted;
 
 	private NavMeshAgent nav;
     private SphereCollider col;
     private GameObject player;
     private LastPlayerSighting lastPlayerSighting;
     private Vector3 previousSighting;
+    private AudioSource audio;
+    
+    
 
     void Awake() {
 		nav = GetComponent<NavMeshAgent>();
         col = GetComponent<SphereCollider>();
         player = GameObject.FindGameObjectWithTag("Player");
+        audio = GetComponent<AudioSource>();
         lastPlayerSighting = GameObject.FindGameObjectWithTag("GameController").GetComponent<LastPlayerSighting>();
 
         personalLastSighting = lastPlayerSighting.resetPosition;
@@ -29,6 +34,7 @@ public class EnemySight : MonoBehaviour {
 			personalLastSighting = lastPlayerSighting.position;
 
 		previousSighting = lastPlayerSighting.position;
+
     }
 
     void OnTriggerStay(Collider other){
@@ -45,9 +51,9 @@ public class EnemySight : MonoBehaviour {
 
 	            if (Physics.Raycast(transform.position, direction.normalized, out hit, col.radius)) {
 
-
 	                if (hit.collider.gameObject.tag == "Player") {
-						playerInSight = true;
+                        
+                        playerInSight = true;
                         lastPlayerSighting.position = player.transform.position;
                     
 	                }
