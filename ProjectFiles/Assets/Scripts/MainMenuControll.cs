@@ -25,6 +25,13 @@ public class MainMenuControll : MonoBehaviour {
     void Start () {
         camObj.DOMove(startCamPos.position, 4).SetEase(Ease.InOutQuart).OnComplete(fadeTitle).SetDelay(1.5f);
         camObj.DORotate(startCamPos.eulerAngles,4).SetEase(Ease.InOutQuart).SetDelay(1.5f);
+
+
+        startBut.DOAnchorPosY((-Screen.height * 0.2f) - (Screen.height / 2), 0.1f);
+        quitBut.DOAnchorPosY((-Screen.height * 0.2f) - (Screen.height / 2), 0.1f);
+
+        quitButY.DOAnchorPosX((Screen.width * -0.3f) - (Screen.width / 2), 0.1f);
+        quitButN.DOAnchorPosX((Screen.width * 1.3f) - (Screen.width / 2), 0.1f);
     }
 
     private void fadeTitle()
